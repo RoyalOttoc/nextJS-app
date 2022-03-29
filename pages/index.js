@@ -2,10 +2,12 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import Seo from '../components/Seo';
 
+const API_KEY = process.env.API_KEY;
+
 export default function Home({results}) {
   const router = useRouter();
   const onClick = (id, title, overview) => {
-    router.push(`/movies/${title}/${overview}/${id}`);
+    router.push(`movies/${title}/${overview}/${id}`);
   };
   return (
     <div className="container">
@@ -57,7 +59,7 @@ export default function Home({results}) {
 
 export async function getServerSideProps() {
   const {results} = await (
-    await fetch(`https://next-js-app-omega.vercel.app/api/movies`)
+    await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`)
   ).json();
   return {
     props: {
