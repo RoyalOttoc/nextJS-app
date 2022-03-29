@@ -1,16 +1,30 @@
-import {useEffect, useState} from 'react';
-
+import Link from 'next/link';
+import {useRouter} from 'next/router';
 import Seo from '../components/Seo';
 
 export default function Home({results}) {
+  const router = useRouter();
+  const onClick = (id, title, overview) => {
+    router.push(`/movies/${title}/${overview}/${id}`);
+  };
   return (
     <div className="container">
       <Seo title="Home" />
 
       {results?.map(movie => (
-        <div className="movie" key={movie.id}>
-          <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} />
-          <h4>{movie.original_title}</h4>
+        <div
+          onClick={() =>
+            onClick(movie.id, movie.original_title, movie.overview)
+          }
+          className="movie"
+          key={movie.id}
+        >
+          <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+          <h4>
+            <Link href={`/movies/${movie.original_title}/${movie.id}`}>
+              <a>{movie.original_title}</a>
+            </Link>
+          </h4>
         </div>
       ))}
       <style jsx>{`
@@ -20,6 +34,9 @@ export default function Home({results}) {
           padding: 20px;
           gap: 20px;
         }
+        .movie {
+          cursor: pointer;
+        }
         .movie img {
           max-width: 100%;
           border-radius: 12px;
@@ -28,7 +45,6 @@ export default function Home({results}) {
         }
         .movie:hover img {
           transform: scale(1.05) translateY(-10px);
-          cursor: pointer;
         }
         .movie h4 {
           font-size: 18px;
